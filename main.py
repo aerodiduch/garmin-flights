@@ -26,23 +26,14 @@ if __name__ == "__main__":
     df["TIME"] = pandas.to_datetime(df["TIME"], format="%d/%m/%Y %H:%M:%S")
     start_time = df["TIME"][0]
     total_flights = 0
-    print(start_time)
     for index, row in df.iterrows():
-        try:
-            if separate_flights(start_time, row["TIME"]):
-                print("Flight separated at time: ", row["TIME"])
-                total_flights += 1
+        if separate_flights(start_time, row["TIME"]):
+            total_flights += 1
 
-            start_time = row["TIME"]
+        start_time = row["TIME"]
 
-        except Exception as e:
-            print(e)
-            print("Error at row: ", index)
-            print(row)
-
-            break
-    print(f"total separated flights {total_flights}")
     first_row_datetime = df["TIME"][0]
     last_row_datetime = df["TIME"].iloc[-1]
     total_time = last_row_datetime - first_row_datetime
-    print(f"Total time: {total_time}")
+    print(f"Total separated flights {total_flights}")
+    print(f"Total time in period: {total_time}")
