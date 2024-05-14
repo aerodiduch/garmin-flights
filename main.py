@@ -73,10 +73,10 @@ def export_flights(flights):
     path = Path(f"output/{datetime.now().strftime('Export %d-%m-%Y %H:%M')}")
     path.mkdir(parents=True, exist_ok=True)
     for dataframe in flights:
-        data = kml_converter.export_kml(dataframe)
         flight_start_date = dataframe["TIME"][0].strftime(OUTPUT_FORMAT)
         flight_end_date = dataframe["TIME"].iloc[-1].strftime(OUTPUT_FORMAT)
         filename = f"{flight_start_date} al {flight_end_date}"
+        data = kml_converter.export_kml(dataframe, title=filename)
         with open(path / f"{filename}.kml", "w") as f:
             f.write(data)
 
