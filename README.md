@@ -1,77 +1,55 @@
-# Garmin Flights Parser
+# Garmin Flights
 
-Easily extract, separate and visualize your flights. A simple processor for data from Garmin Aera 500.
+[![License: MIT](https://img.shields.io/github/license/aerodiduch/garmin-flights)](LICENSE) ![Python](https://img.shields.io/badge/python-3776AB?logo=python&logoColor=white) ![Garmin Aera 500](https://img.shields.io/badge/GPS-Garmin%20Aera%20500-007CC3) ![KML for Google Earth](https://img.shields.io/badge/output-KML%20for%20Google%20Earth-34A853)
 
-## Table of Contents
+[Español](README.es.md)
 
-- [About](#about)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
+Extract, separate and see your flights. Garmin Flights takes the data you pull out of a Garmin Aera 500, splits it into one file per flight and writes each flight as a KML track you can open in Google Earth.
 
-## About
+- Reads the data from an Excel file (`data.xlsx`).
+- A new flight starts whenever there are 15 minutes or more between two points.
+- Each flight becomes a KML with the time, position and altitude of every point, named after its start and end time.
 
-This project aims to help people easily extract the data from Garmin Aera 500 and through a Python script separate the flights, parse and export them into a `.kml` format. This allows importing into Google Earth and visualize the flight in 3D space.
+## Install
 
-## Installation
+You need Python 3 and Git.
 
-### Required dependencies
-
-```txt
-et-xmlfile==1.1.0
-numpy==1.26.4
-openpyxl==3.1.2
-pandas==2.2.2
-python-dateutil==2.9.0.post0
-pytz==2024.1
-six==1.16.0
-tzdata==2024.1
-```
-
-### Installation with virtual environment
-
-1) Clone this repo
-
-```bash
+```sh
 git clone https://github.com/aerodiduch/garmin-flights
-```
-
-2) Create venv and install dependencies
-
-```bash
-cd garmin-flights && python -m venv venv
-```
-
-```bash
-source venv/bin/activate && pip install -r requirements.txt
+cd garmin-flights
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
 ## Usage
 
-Before executing `main.py` you need to have a xlsx file containing a specific format with the data extracted from Garmin Aera 500. It is mandatory that the file is named `data.xlsx` for the moment, and so is a specific column arrangement.
+1. Put the data in the repo folder as `data.xlsx`, with these columns:
 
-`data.xlsx`
+   | INDEX | ELEVATION | LEG DISTANCE | LEG TIME | LEG SPEED | LEG COURSE | TIME | POSITION |
+   |---|---|---|---|---|---|---|---|
+   | 1 | 364 m | 467 m | 0:00:11 | 150 km/h | 124.9° true | 06/11/2022 18:41:08 | S34° 40.624' W58° 51.277' |
 
-| INDEX | ELEVATION | LEG DISTANCE | LEG TIME | LEG SPEED | LEG COURSE  | TIME                | POSITION                  |
-| ----- | --------- | ------------ | -------- | --------- | ----------- | ------------------- | ------------------------- |
-| 1     | 364 m     | 467 m        | 0:00:11  | 150 km/h  | 124.9° true | 06/11/2022 18:41:08 | S34° 40.624' W58° 51.277' |
+   `TIME` goes as `DD/MM/YYYY HH:MM:SS`, `ELEVATION` in meters and `POSITION` in degrees and decimal minutes.
+2. Run:
 
+   ```sh
+   python main.py
+   ```
 
-Have in mind, the displayed time is in format `DD/MM/YYYY HH:MM:SS`
+3. The KML files land in `output/Export <date and time>/`, one per flight. Open them in Google Earth.
 
-You can have as many rows as you want, my test were with a file with 5000+ rows. Performance will decrease.
+It has handled files of more than 5,000 rows; big files take longer.
 
-Once the data file is present in the root directory of this repo, you can execute main.py
+## If something doesn't work
 
-```bash
-python main.py
-```
+- **Windows.** The output folder name includes the time with a colon (for example `13:07`), and Windows doesn't allow colons in folder names. As it is, it runs on macOS and Linux.
+- **File not found.** The data has to be called `data.xlsx` and sit next to `main.py`.
 
-This will generate results in `output/current_datetime`. The criteria for separating flights is a time difference of 15 minutes between legs. 
+## How it works
 
-## Contributing
-TODO.
+`main.py` reads the Excel with pandas and turns each position into decimal degrees and each elevation into a number (`libs/parsers.py`). Then it walks the points in order and starts a new flight after a gap of 15 minutes or more. `libs/kml_converter.py` writes each flight as a `gx:Track`, with a `<when>` and a `<gx:coord>` per point.
 
 ## License
-TODO.
+
+MIT, see [LICENSE](LICENSE).
