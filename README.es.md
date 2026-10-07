@@ -4,6 +4,8 @@
 
 [English](README.md)
 
+![Un GPS aeronáutico portátil en el panel de un avión chico al atardecer, al lado de una notebook con el track del vuelo en Google Earth](docs/cover.jpg)
+
 Sacá, separá y mirá tus vuelos. Garmin Flights toma los datos que sacás de un Garmin Aera 500, los divide en un archivo por vuelo y escribe cada vuelo como un track KML que podés abrir en Google Earth.
 
 - Lee los datos de un Excel (`data.xlsx`).

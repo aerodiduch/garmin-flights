@@ -4,6 +4,8 @@
 
 [Español](README.es.md)
 
+![A handheld aviation GPS on the panel of a small plane at sunset, next to a laptop showing the flight track in Google Earth](docs/cover.jpg)
+
 Extract, separate and see your flights. Garmin Flights takes the data you pull out of a Garmin Aera 500, splits it into one file per flight and writes each flight as a KML track you can open in Google Earth.
 
 - Reads the data from an Excel file (`data.xlsx`).
